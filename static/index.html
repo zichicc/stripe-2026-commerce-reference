@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aetheria Labs — Acoustic Hardware &amp; Cloud DSP Store | Stripe 2026 Payment Showcase</title>
+  <meta name="description" content="Flagship e-commerce demonstration store powered by Stripe's latest payment technologies: Optimized Checkout Suite, Adaptive Pricing, Stripe Tax, Radar AI, Billing Meters, Connect v2, and Agentic Commerce." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="https://js.stripe.com/v3/" async></script>
+</head>
+<body>
+
+  <!-- 1. TOP TELEMETRY & STRIPE API VERSION RIBBON -->
+  <div class="telemetry-ribbon" role="region" aria-label="Stripe Payment Layer Telemetry">
+    <div class="telemetry-ribbon__left">
+      <span class="telemetry-tag telemetry-tag--live" id="telemetry-mode-badge">
+        <span class="status-dot"></span>
+        <span id="telemetry-mode-text">SANDBOX SIMULATOR + LIVE API READY</span>
+      </span>
+      <span class="telemetry-tag">API: <strong id="telemetry-api-version">2026-09-30.acacia</strong></span>
+      <span class="telemetry-tag">OCS: <strong>Payment Element + Express + Link</strong></span>
+      <span class="telemetry-tag">Tax: <strong>/v1/tax/calculations</strong></span>
+    </div>
+    <div class="telemetry-ribbon__right">
+      <span class="telemetry-tag" id="telemetry-fx-summary">FX Quote: 1.00 USD · NY Tax 8.875%</span>
+      <button type="button" class="btn" id="btn-open-api-config" style="padding: 0.2rem 0.6rem; font-size: 0.72rem; font-family: var(--font-mono);">
+        Configure Stripe Keys (pk_test / sk_test)
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. STICKY SITE HEADER & NAVIGATION -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="#storefront" class="brand-lockup" id="nav-brand-logo">
+        <span class="brand-lockup__title">Aetheria // Labs</span>
+        <span class="brand-lockup__edition">STRIPE 2026 COMMERCE REFERENCE</span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Primary Store and Stripe Capabilities">
+        <button type="button" class="nav-tab is-active" id="tab-btn-storefront" data-view="storefront">
+          01. Flagship Store
+        </button>
+        <button type="button" class="nav-tab" id="tab-btn-checkout" data-view="checkout">
+          02. Optimized Checkout (OCS)
+          <span class="nav-tab__badge" id="nav-checkout-badge">2</span>
+        </button>
+        <button type="button" class="nav-tab" id="tab-btn-billing" data-view="billing">
+          03. Billing &amp; Usage Meters
+        </button>
+        <button type="button" class="nav-tab" id="tab-btn-agentic" data-view="agentic">
+          04. Connect v2, Issuing &amp; Agentic AI
+        </button>
+        <button type="button" class="nav-tab" id="tab-btn-statemachine" data-view="statemachine">
+          05. Payment State Machine &amp; API Lab
+          <span class="nav-tab__badge">13 Steps</span>
+        </button>
+        <button type="button" class="nav-tab" id="tab-btn-guardrails" data-view="guardrails">
+          06. Production Guardrails &amp; Security
+          <span class="nav-tab__badge">7 Pillars</span>
+        </button>
+        <button type="button" class="nav-tab nav-tab--popup-trigger" id="tab-btn-agentic-chat" data-view="agentic-chat">
+          🤖 AI Shopper Widget
+          <span class="nav-tab__badge">Local LLM</span>
+        </button>
+      </nav>
+
+      <div class="header-controls">
+        <div class="locale-selector-wrap" title="Stripe Adaptive Pricing &amp; Local Payment Method Auto-Ordering">
+          <label for="select-locale">Adaptive Pricing:</label>
+          <select id="select-locale" class="locale-select" aria-label="Select Customer Market for Adaptive Pricing">
+            <option value="US">🇺🇸 United States (USD $)</option>
+            <option value="DE">🇩🇪 Germany · EU (EUR €)</option>
+            <option value="NL">🇳🇱 Netherlands · EU (EUR €)</option>
+            <option value="GB">🇬🇧 United Kingdom (GBP £)</option>
+            <option value="TR">🇹🇷 Türkiye (TRY ₺)</option>
+            <option value="JP">🇯🇵 Japan (JPY ¥)</option>
+          </select>
+        </div>
+
+        <button type="button" class="btn btn--primary cart-trigger" id="btn-header-checkout">
+          <span>Checkout</span>
+          <span class="cart-count-pill" id="header-cart-count">2</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. MAIN CONTENT AREA -->
+  <main class="main-container">
+
+    <!-- ====================================================================
+         VIEW 1: FLAGSHIP STOREFRONT & ADAPTIVE PRICING CATALOG
+         ==================================================================== -->
+    <section id="view-storefront" class="view-panel is-active" aria-labelledby="hero-main-heading">
+      <div class="editorial-hero">
+        <div class="editorial-hero__content">
+          <span class="editorial-hero__kicker">Acoustic Hardware · Neural Cloud DSP · Creator Marketplace · Bridge Stablecoins</span>
+          <h1 class="editorial-hero__headline" id="hero-main-heading">
+            Precision studio instruments powered by a unified global payment architecture.
+          </h1>
+          <p class="editorial-hero__lead">
+            Experience how a single cart seamlessly combines physical hardware, recurring SaaS subscriptions with usage-based metering, multi-vendor marketplace split payouts, Bridge Stablecoin settlement, and 7 production-grade security guardrails.
+          </p>
+          <div class="hero-actions">
+            <button type="button" class="btn btn--cobalt" id="btn-hero-go-agentic-chat">
+              🤖 Shop via Local LLM Agentic Chatbot &rarr;
+            </button>
+            <button type="button" class="btn" id="btn-hero-go-statemachine">
+              13-Step Payment State Machine Lab &rarr;
+            </button>
+            <button type="button" class="btn btn--link-green" id="btn-hero-go-guardrails">
+              7 Production Security Guardrails &rarr;
+            </button>
+            <button type="button" class="btn btn--primary" id="btn-hero-go-checkout">
+              Open Optimized Checkout Suite
+            </button>
+            <button type="button" class="btn" id="btn-hero-go-agentic">
+              Try AI Agentic &amp; Bridge Stablecoins
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Adaptive Pricing & Tax Telemetry Card -->
+        <aside class="fx-live-card" aria-label="Live Stripe Adaptive Pricing and Tax Quote">
+          <div class="fx-live-card__header">
+            <span>STRIPE ADAPTIVE PRICING &amp; TAX ENGINE</span>
+            <strong id="fx-card-quote-id">fxq_1Q9LiveQuote</strong>
+          </div>
+          <div class="fx-live-card__grid">
+            <div class="fx-metric">
+              <span class="fx-metric__label">PRESENTMENT CURRENCY</span>
+              <span class="fx-metric__val" id="fx-card-currency">USD ($) · 1.000x</span>
+            </div>
+            <div class="fx-metric">
+              <span class="fx-metric__label">TAX JURISDICTION</span>
+              <span class="fx-metric__val" id="fx-card-tax">NY Sales Tax (8.875%)</span>
+            </div>
+            <div class="fx-metric">
+              <span class="fx-metric__label">TOP AI PAYMENT METHOD</span>
+              <span class="fx-metric__val" id="fx-card-top-pm">Link 1-Click / Card</span>
+            </div>
+            <div class="fx-metric">
+              <span class="fx-metric__label">SUBSCRIPTION FX BUFFER</span>
+              <span class="fx-metric__val" id="fx-card-buffer">0.0% (Base USD)</span>
+            </div>
+          </div>
+          <p style="font-size: 0.74rem; color: var(--ink-muted); font-family: var(--font-mono);">
+            Switch the country selector in the top header to see Stripe Adaptive Pricing convert prices, reorder local payment methods (iDEAL, Klarna, SEPA, PayPay), and recalculate regional VAT/KDV/JCT.
+          </p>
+        </aside>
+      </div>
+
+      <!-- Category Filter Toolbar -->
+      <div class="catalog-toolbar">
+        <div class="filter-pills" role="tablist" aria-label="Filter products by Stripe commerce model">
+          <button type="button" class="filter-pill is-active" data-filter="all" id="filter-btn-all">
+            All Flagship Products (6)
+          </button>
+          <button type="button" class="filter-pill" data-filter="one_time" id="filter-btn-hardware">
+            Direct Hardware · Payment Element + BNPL (3)
+          </button>
+          <button type="button" class="filter-pill" data-filter="subscription_metered" id="filter-btn-billing">
+            Stripe Billing + Metronome Usage Meter (1)
+          </button>
+          <button type="button" class="filter-pill" data-filter="connect_split" id="filter-btn-connect">
+            Stripe Connect v2 Split Marketplace (2)
+          </button>
+        </div>
+
+        <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-muted);">
+          Showing <strong id="catalog-visible-count">6</strong> items in <strong id="catalog-currency-label">USD</strong>
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="catalog-grid" id="catalog-grid">
+        <!-- Populated dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: OPTIMIZED CHECKOUT SUITE (OCS), TAX, RADAR & 3DS2
+         ==================================================================== -->
+    <section id="view-checkout" class="view-panel" aria-labelledby="checkout-main-heading">
+
+      <!-- Live PaymentIntent State Machine Tracker Strip -->
+      <div class="state-tracker-strip" aria-label="Live Stripe PaymentIntent State Machine Tracker">
+        <div class="state-tracker-strip__header">
+          <span>LIVE PAYMENT_INTENT STATE MACHINE TRACKER (CLICK ANY STATE TO LEARN ITS API CONTRACT)</span>
+          <button type="button" class="btn" id="btn-checkout-open-sm-lab" style="padding: 0.15rem 0.55rem; font-size: 0.68rem; font-family: var(--font-mono);">
+            Open Full 12-Step State Machine Academy &rarr;
+          </button>
+        </div>
+        <div class="state-nodes-flow" id="checkout-state-nodes-flow">
+          <button type="button" class="state-pill-node is-visited" onclick="openStateMachineStep(0)">0. Quote &amp; Tax Calc</button>
+          <span class="state-arrow">&rarr;</span>
+          <button type="button" class="state-pill-node is-current" id="cnode-requires_payment_method" onclick="openStateMachineStep(1)">1. requires_payment_method</button>
+          <span class="state-arrow">&rarr;</span>
+          <button type="button" class="state-pill-node" id="cnode-requires_confirmation" onclick="openStateMachineStep(3)">2. requires_confirmation</button>
+          <span class="state-arrow">&rarr;</span>
+          <button type="button" class="state-pill-node" id="cnode-requires_action" onclick="openStateMachineStep(5)">3. requires_action (3DS2)</button>
+          <span class="state-arrow">/</span>
+          <button type="button" class="state-pill-node" id="cnode-processing" onclick="openStateMachineStep(6)">4. processing (Async)</button>
+          <span class="state-arrow">/</span>
+          <button type="button" class="state-pill-node" id="cnode-requires_capture" onclick="openStateMachineStep(7)">5. requires_capture (Hold)</button>
+          <span class="state-arrow">&rarr;</span>
+          <button type="button" class="state-pill-node" id="cnode-succeeded" onclick="openStateMachineStep(8)">6. succeeded (Captured)</button>
+          <span class="state-arrow">/</span>
+          <button type="button" class="state-pill-node" id="cnode-canceled" onclick="openStateMachineStep(11)">7. canceled / refunded</button>
+        </div>
+      </div>
+
+      <div class="checkout-layout">
+
+        <!-- Left Column: Express Checkout, Link, Address/Tax, Payment Element, Radar -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title" id="checkout-main-heading">Stripe Optimized Checkout Suite (OCS)</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Dynamic AI payment method ordering, Link 1-click, Stripe Tax, and Radar 3DS2
+              </p>
+            </div>
+            <span class="surface-panel__tag">PaymentIntent API v2026</span>
+          </div>
+
+          <!-- Express Checkout Element -->
+          <div class="express-checkout-box">
+            <div class="express-checkout-box__label">
+              <span>EXPRESS CHECKOUT ELEMENT (1-CLICK WALLETS)</span>
+              <span>stripe.elements().create('expressCheckout')</span>
+            </div>
+            <div class="express-wallets-grid" id="express-wallets-container">
+              <!-- Populated dynamically per locale -->
+            </div>
+          </div>
+
+          <!-- Link Authentication & Customer Address / EU VAT ID -->
+          <div class="form-section-title">
+            <span>01. LINK AUTHENTICATION &amp; STRIPE TAX ADDRESS ELEMENT</span>
+            <span style="color: var(--accent-link-green);">● Link Auto-Fill Verified</span>
+          </div>
+
+          <div class="field-grid">
+            <div class="field-group">
+              <label class="field-label" for="input-customer-email">
+                <span>Customer Email (Link Auth Element)</span>
+                <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent-link-green);">OTP Verified</span>
+              </label>
+              <input type="email" id="input-customer-email" class="field-input" value="alex.rivera@studio-aetheria.io" />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="input-postal-code">
+                <span>Postal / ZIP Code (Tax Nexus)</span>
+                <span style="font-family: var(--font-mono); font-size: 0.68rem;" id="label-country-code">US</span>
+              </label>
+              <input type="text" id="input-postal-code" class="field-input" value="10001" />
+            </div>
+
+            <div class="field-group field-group--full">
+              <label class="field-label" for="input-vat-id">
+                <span>B2B Tax / EU VAT ID (Optional — e.g. <code>DE123456789</code> triggers 0% EU Reverse Charge)</span>
+                <button type="button" class="btn" id="btn-fill-sample-vat" style="padding: 0.1rem 0.45rem; font-size: 0.68rem; font-family: var(--font-mono);">
+                  Test DE B2B VAT ID
+                </button>
+              </label>
+              <input type="text" id="input-vat-id" class="field-input" placeholder="Enter EU VAT ID (e.g. DE123456789) or leave blank for standard consumer tax" />
+            </div>
+          </div>
+
+          <!-- Capture Method & Setup Future Usage Vaulting Controls -->
+          <div class="form-section-title">
+            <span>02. AUTHORIZATION CAPTURE MODE, DETERMINISTIC IDEMPOTENCY &amp; METADATA</span>
+            <span>Zero-Trust &amp; 24h Idempotency</span>
+          </div>
+          <div class="field-grid" style="margin-bottom: 0.75rem;">
+            <div class="field-group">
+              <label class="field-label" for="select-capture-method">Capture Method (<code>capture_method</code>)</label>
+              <select id="select-capture-method" class="field-select">
+                <option value="automatic">automatic (Immediate Auth + Capture &rarr; succeeded)</option>
+                <option value="manual">manual (7-Day Pre-Auth Hold &rarr; requires_capture)</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="select-setup-future-usage">Vault Credential (<code>setup_future_usage</code>)</label>
+              <select id="select-setup-future-usage" class="field-select">
+                <option value="off_session">off_session (Vault Network Token for MIT / Subscriptions)</option>
+                <option value="on_session">on_session (Vault for 1-Click Saved Checkout)</option>
+                <option value="">none (One-Time Guest Transaction)</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="input-order-id">
+                <span>Business Order ID (<code>metadata.order_id</code>)</span>
+                <button type="button" class="btn" id="btn-new-order-id" style="padding: 0.05rem 0.4rem; font-size: 0.66rem; font-family: var(--font-mono);">New Order ID</button>
+              </label>
+              <input type="text" id="input-order-id" class="field-input" value="ord_2026_aeth_901" style="font-family: var(--font-mono); font-size: 0.78rem;" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="input-attempt-no">
+                <span>Attempt # (<code>Idempotency-Key</code> Suffix)</span>
+                <button type="button" class="btn" id="btn-inc-attempt" style="padding: 0.05rem 0.4rem; font-size: 0.66rem; font-family: var(--font-mono);">+1 Attempt</button>
+              </label>
+              <input type="number" id="input-attempt-no" class="field-input" value="1" min="1" max="99" style="font-family: var(--font-mono); font-size: 0.78rem;" />
+            </div>
+          </div>
+
+          <div style="padding: 0.55rem 0.75rem; margin-bottom: 1rem; background: var(--bg-canvas); border: 1px solid var(--border-hairline); border-radius: 6px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-secondary); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem;">
+            <span>🔑 <strong>Idempotency-Key:</strong> <code id="live-idem-key-preview" style="color: var(--accent-cobalt);">pi_create_ord_2026_aeth_901_attempt_1</code></span>
+            <span>🛡️ <strong>Zero-Trust Pricing:</strong> <code>sku_id + qty only</code></span>
+            <span>📦 <strong>Expand:</strong> <code>latest_charge.balance_transaction</code></span>
+          </div>
+
+          <!-- Stripe Payment Element (AI-Ordered Payment Methods) -->
+          <div class="form-section-title">
+            <span>03. STRIPE PAYMENT ELEMENT (AI-ORDERED FOR SELECTED MARKET)</span>
+            <span id="pm-locale-indicator">Market: US</span>
+          </div>
+
+          <div class="payment-methods-tabs" id="payment-methods-tabs" role="tablist">
+            <!-- Populated dynamically per locale -->
+          </div>
+
+          <!-- Dynamic Payment Method Input Surface -->
+          <div id="payment-element-dynamic-body" class="express-checkout-box" style="margin-bottom: 1rem;">
+            <!-- Populated dynamically based on selected payment method -->
+          </div>
+
+          <!-- Stripe Radar AI, 3DS2 & Granular Exception Taxonomy Simulator -->
+          <div class="radar-scenario-bar">
+            <span class="radar-scenario-bar__title">
+              STRIPE RADAR AI, 3DS2 &amp; EXCEPTION TAXONOMY (402 vs 429/503) SIMULATOR:
+            </span>
+            <div class="scenario-chips" id="radar-scenario-chips">
+              <button type="button" class="scenario-chip is-active" data-scenario="success_standard" id="scenario-btn-success">
+                ✓ 4242...4242 · Frictionless Pass (Risk: 11)
+              </button>
+              <button type="button" class="scenario-chip" data-scenario="3ds2_challenge" id="scenario-btn-3ds2">
+                🔒 4000...3155 · 3DS2 Step-Up Challenge (Risk: 42)
+              </button>
+              <button type="button" class="scenario-chip" data-scenario="async_processing" id="scenario-btn-async">
+                ⏳ SEPA / ACH · Async Clearing (processing)
+              </button>
+              <button type="button" class="scenario-chip" data-scenario="radar_block" id="scenario-btn-radar">
+                🛡️ 4000...0341 · Radar Fraud Block (402 CardError)
+              </button>
+              <button type="button" class="scenario-chip" data-scenario="decline_insufficient" id="scenario-btn-decline">
+                ✕ 4000...9995 · Insufficient Funds (402 CardError)
+              </button>
+              <button type="button" class="scenario-chip" data-scenario="rate_limit_429" id="scenario-btn-429">
+                ⚡ HTTP 429 · RateLimitError (Auto-Retry Same Key)
+              </button>
+              <button type="button" class="scenario-chip" data-scenario="api_connection_error" id="scenario-btn-503">
+                🌐 HTTP 503 · APIConnectionError (Backoff + Jitter)
+              </button>
+            </div>
+          </div>
+
+          <div id="checkout-feedback-banner"></div>
+
+          <div style="display: flex; gap: 0.55rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--cobalt" id="btn-submit-payment" style="flex: 2; padding: 0.85rem; font-size: 0.95rem;">
+              Execute Stripe PaymentIntent (<span id="btn-pay-amount">$1,517.72</span>) &rarr;
+            </button>
+            <button type="button" class="btn" id="btn-retry-same-idem-key" title="Re-send the exact same Idempotency-Key to test 24h cached replay or HTTP 400 parameter mismatch" style="flex: 1; font-family: var(--font-mono); font-size: 0.74rem;">
+              🔁 Replay Same Idempotency-Key
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Order Summary, Stripe Tax Breakdown, Connect Split Waterfall & Receipt -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Order Summary &amp; Tax / Split Telemetry</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Real-time <code>/v1/tax/calculations</code> &amp; <code>/v2/core/accounts</code> split routing
+              </p>
+            </div>
+            <button type="button" class="btn" id="btn-recalculate-tax" style="padding: 0.3rem 0.65rem; font-size: 0.74rem; font-family: var(--font-mono);">
+              Refresh Tax API
+            </button>
+          </div>
+
+          <div class="cart-line-list" id="checkout-cart-list">
+            <!-- Populated dynamically -->
+          </div>
+
+          <div class="summary-ledger" id="checkout-summary-ledger">
+            <div class="ledger-row">
+              <span>Subtotal (<span id="ledger-item-count">2</span> items)</span>
+              <span class="ledger-mono" id="ledger-subtotal">$1,389.00</span>
+            </div>
+            <div class="ledger-row">
+              <span>Express Courier Shipping (<code>txcd_92010001</code>)</span>
+              <span class="ledger-mono" id="ledger-shipping">Free</span>
+            </div>
+            <div class="ledger-row">
+              <span id="ledger-tax-label">Stripe Tax (NY Sales Tax 8.875%)</span>
+              <span class="ledger-mono" id="ledger-tax">$123.27</span>
+            </div>
+            <div class="ledger-row" id="ledger-buffer-row" style="display: none; color: var(--accent-cobalt);">
+              <span>Subscription FX Stability Buffer</span>
+              <span class="ledger-mono" id="ledger-buffer-val">Locked (2.0%)</span>
+            </div>
+            <div class="ledger-row ledger-row--total">
+              <span>Total Presentment (<span id="ledger-currency-code">USD</span>)</span>
+              <span class="ledger-mono" id="ledger-total">$1,512.27</span>
+            </div>
+          </div>
+
+          <!-- Stripe Connect Multi-Vendor Split Waterfall -->
+          <div class="split-waterfall-card" id="connect-waterfall-box">
+            <div class="split-waterfall-card__title">
+              <span>STRIPE CONNECT V2 MULTI-VENDOR SPLIT WATERFALL</span>
+              <span>12% Platform Fee</span>
+            </div>
+            <div id="connect-waterfall-items">
+              <!-- Populated dynamically when Connect items are in cart -->
+            </div>
+          </div>
+
+          <!-- Latest PaymentIntent & Post-Auth State Machine Actions -->
+          <div class="split-waterfall-card" id="latest-pi-telemetry-box" style="margin-top: 1rem; display: none;">
+            <div class="split-waterfall-card__title">
+              <span>ACTIVE PAYMENT_INTENT LIFECYCLE &amp; STATE CONTROLS</span>
+              <span id="pi-result-status-badge">succeeded</span>
+            </div>
+            <div id="pi-result-details" class="split-item"></div>
+            <div id="pi-post-auth-actions" style="display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.65rem;">
+              <!-- Populated dynamically based on PaymentIntent state (e.g., Capture Hold, Void Hold, Refund + Reverse Transfer) -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: STRIPE BILLING + METRONOME USAGE METERS & STABILITY BUFFER
+         ==================================================================== -->
+    <section id="view-billing" class="view-panel" aria-labelledby="billing-main-heading">
+      <div class="two-col-grid">
+
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title" id="billing-main-heading">Stripe Billing + Metronome Usage Engine</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Hybrid subscription (<code>$39/mo</code> base) + real-time metered AI stem compute (<code>/v1/billing/meter_events</code>)
+              </p>
+            </div>
+            <span class="surface-panel__tag">mtr_1Q9NeuralDSPComputeSec</span>
+          </div>
+
+          <div class="summary-ledger">
+            <div class="ledger-row">
+              <span>Active Subscription ID</span>
+              <code class="ledger-mono">sub_1Q9NeuralCloudProActive</code>
+            </div>
+            <div class="ledger-row">
+              <span>Billing Meter Event Name</span>
+              <code class="ledger-mono">neural_dsp_compute_seconds</code>
+            </div>
+            <div class="ledger-row">
+              <span>2026 Adaptive Pricing Stability Buffer</span>
+              <span class="ledger-mono" style="color: var(--accent-link-green); font-weight: 700;">Active · 3.5% FX Renewal Shield</span>
+            </div>
+            <div class="ledger-row">
+              <span>Pricing Tier Model</span>
+              <span class="ledger-mono">5,000 sec included · $0.004/sec overage</span>
+            </div>
+          </div>
+
+          <div class="meter-gauge-wrap">
+            <div class="ledger-row" style="font-family: var(--font-mono); font-size: 0.8rem;">
+              <span>CURRENT PERIOD USAGE</span>
+              <strong><span id="meter-used-sec">3,850</span> / 5,000 included DSP seconds</strong>
+            </div>
+            <div class="meter-bar-track">
+              <div class="meter-bar-fill" id="meter-bar-fill" style="width: 77%;"></div>
+            </div>
+            <div class="ledger-row" style="font-size: 0.76rem; color: var(--ink-muted); font-family: var(--font-mono);">
+              <span id="meter-overage-status">1,150 included seconds remaining before metered overage</span>
+              <span>Rate: $0.40 / 100s</span>
+            </div>
+          </div>
+
+          <div class="form-section-title">
+            <span>INGEST REAL-TIME METER EVENT (POST /v1/billing/meter_events)</span>
+          </div>
+          <div style="display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <button type="button" class="btn btn--cobalt" id="btn-ingest-meter-small">
+              +1,250 DSP Sec (8-Track Stem Isolation)
+            </button>
+            <button type="button" class="btn btn--primary" id="btn-ingest-meter-large">
+              +3,000 DSP Sec (Dolby Atmos Spatial Master)
+            </button>
+          </div>
+
+          <div class="summary-ledger">
+            <div class="ledger-row">
+              <span>Base Monthly Subscription (<code>price_1Q9NeuralCloudProMonthly</code>)</span>
+              <span class="ledger-mono">$39.00</span>
+            </div>
+            <div class="ledger-row">
+              <span>Metered Compute Overage (<span id="invoice-overage-sec">0</span> sec &times; $0.004)</span>
+              <span class="ledger-mono" id="invoice-overage-amount">$0.00</span>
+            </div>
+            <div class="ledger-row ledger-row--total">
+              <span>Upcoming Invoice Preview (<code>/v1/invoices/create_preview</code>)</span>
+              <span class="ledger-mono" id="invoice-total-preview">$39.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Ingested Meter Events Stream</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                High-throughput idempotent event ingestion with real-time invoice aggregation
+              </p>
+            </div>
+            <span class="surface-panel__tag">Idempotency-Key Verified</span>
+          </div>
+
+          <table class="event-table" aria-label="Ingested Stripe Billing Meter Events">
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Workload</th>
+                <th>DSP Sec</th>
+                <th>Idempotency Key</th>
+              </tr>
+            </thead>
+            <tbody id="meter-events-tbody">
+              <!-- Populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 4: STRIPE AGENTIC COMMERCE & CONNECT ACCOUNTS V2
+         ==================================================================== -->
+    <section id="view-agentic" class="view-panel" aria-labelledby="agentic-main-heading">
+      <div class="two-col-grid">
+
+        <!-- Left: Stripe Agentic Commerce Toolkit -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title" id="agentic-main-heading">Stripe Agentic Commerce Toolkit (2026)</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Autonomous AI procurement via <code>/v1/agentic/order_intents</code> &amp; Delegated Payment Tokens
+              </p>
+            </div>
+            <span class="surface-panel__tag">spt_agent_1Q9...</span>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--ink-secondary); margin-bottom: 1rem;">
+            Instruct the Aetheria Procurement Agent to assemble a studio bundle within a hard cryptographic spend limit. Stripe issues a single-use, MCC-locked <strong>Delegated Payment Token</strong> that never exposes underlying card credentials to the AI agent.
+          </p>
+
+          <div class="field-group" style="margin-bottom: 0.85rem;">
+            <label class="field-label" for="select-agent-mandate">Select AI Procurement Mandate &amp; Spend Guardrail</label>
+            <select id="select-agent-mandate" class="field-select">
+              <option value="field_rig_under_1300">Portable Field Synthesis &amp; Binaural Recording Rig (Max $1,350 USD)</option>
+              <option value="studio_mastering_bundle">Complete Tactile Mastering &amp; Planar Reference Suite (Max $1,400 USD)</option>
+              <option value="creator_marketplace_rig">Multi-Vendor Creator DSP &amp; Kyoto Microphone Split Rig (Max $900 USD)</option>
+            </select>
+          </div>
+
+          <button type="button" class="btn btn--cobalt" id="btn-run-agentic-intent" style="width: 100%; margin-bottom: 1.25rem;">
+            Generate Agentic OrderIntent &amp; Scoped Payment Token &rarr;
+          </button>
+
+          <div id="agentic-intent-result" class="summary-ledger" style="display: none;">
+            <!-- Populated dynamically when Agentic OrderIntent is created -->
+          </div>
+        </div>
+
+        <!-- Right: Stripe Connect Accounts v2 Onboarding & Marketplace Control -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Stripe Connect Accounts v2 API</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Unified <code>/v2/core/accounts</code> with platform fee collection &amp; Stripe-managed risk
+              </p>
+            </div>
+            <span class="surface-panel__tag">v2/core/accounts</span>
+          </div>
+
+          <div class="cart-line-list" id="connect-accounts-list">
+            <div class="split-item">
+              <div class="ledger-row">
+                <strong>Klangwerk Berlin GmbH (DE)</strong>
+                <code>acct_2V9klangwerkBerlin</code>
+              </div>
+              <div style="color: var(--ink-muted); margin-top: 0.2rem;">
+                Controller: <code>fees.payer=application</code> · <code>losses.payments=stripe</code> · 12% Platform Fee
+              </div>
+            </div>
+            <div class="split-item">
+              <div class="ledger-row">
+                <strong>Kyoto Acoustics KK (JP)</strong>
+                <code>acct_2V9kyotoAcoustics</code>
+              </div>
+              <div style="color: var(--ink-muted); margin-top: 0.2rem;">
+                Controller: <code>fees.payer=application</code> · <code>losses.payments=stripe</code> · Cross-Border JPY Payouts
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section-title">
+            <span>ONBOARD NEW PARTNER STUDIO (POST /v2/core/accounts)</span>
+          </div>
+          <div class="field-grid" style="margin-bottom: 0.85rem;">
+            <div class="field-group">
+              <label class="field-label" for="input-connect-studio-name">Creator Studio Name</label>
+              <input type="text" id="input-connect-studio-name" class="field-input" value="Nordic Modular Lab AB" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="select-connect-country">Domicile Country</label>
+              <select id="select-connect-country" class="field-select">
+                <option value="SE">🇸🇪 Sweden (SE)</option>
+                <option value="DE">🇩🇪 Germany (DE)</option>
+                <option value="US">🇺🇸 United States (US)</option>
+                <option value="GB">🇬🇧 United Kingdom (GB)</option>
+                <option value="JP">🇯🇵 Japan (JP)</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn btn--primary" id="btn-create-connect-account" style="width: 100%;">
+            Provision Connected Account via /v2/core/accounts
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Second Row in View 4: Stripe Issuing Virtual Cards & SetupIntents MIT Vaulting -->
+      <div class="two-col-grid" style="margin-top: 1.75rem;">
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Stripe Issuing &amp; Treasury Virtual Cards</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Issue programmatic virtual commercial cards (<code>/v1/issuing/cards</code>) with real-time <code>issuing_authorization.request</code> webhook controls
+              </p>
+            </div>
+            <span class="surface-panel__tag">ic_1Q9...</span>
+          </div>
+          <div class="field-grid" style="margin-bottom: 0.85rem;">
+            <div class="field-group">
+              <label class="field-label" for="input-issuing-holder">Cardholder Profile</label>
+              <input type="text" id="input-issuing-holder" class="field-input" value="Aetheria Touring Acoustic Engineer" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="input-issuing-limit">Per-Auth Spend Limit (USD)</label>
+              <input type="number" id="input-issuing-limit" class="field-input" value="2500" />
+            </div>
+          </div>
+          <button type="button" class="btn btn--cobalt" id="btn-issue-virtual-card" style="width: 100%; margin-bottom: 1rem;">
+            Issue Virtual Card &amp; Simulate Real-Time Authorization Webhook
+          </button>
+          <div id="issuing-card-result" class="summary-ledger" style="display: none;"></div>
+        </div>
+
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Stripe SetupIntents &amp; Network Token Vaulting</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Zero-dollar credential vaulting (<code>/v1/setup_intents</code>) with Visa VTS / Mastercard MDES Network Tokens &amp; MIT exemption
+              </p>
+            </div>
+            <span class="surface-panel__tag">seti_1Q9...</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--ink-secondary); margin-bottom: 1rem;">
+            When you need to save a customer's card or bank mandate without charging them immediately (e.g., 14-day hardware trial or post-paid compute metering), create a <code>SetupIntent</code> with <code>usage=off_session</code>.
+          </p>
+          <button type="button" class="btn btn--primary" id="btn-run-setup-intent" style="width: 100%; margin-bottom: 1rem;">
+            Execute SetupIntent (usage=off_session) &amp; Vault Network Token
+          </button>
+          <div id="setup-intent-result" class="summary-ledger" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Third Row in View 4: Stripe + Bridge Stablecoin Orchestration (Liquidation Addresses & Instant Cross-Border Payouts) -->
+      <div class="two-col-grid" style="margin-top: 1.75rem;">
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Bridge Stablecoin Liquidation Addresses</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Provision deterministic on-chain addresses (<code>/v0/liquidation_addresses</code>) that auto-convert incoming <code>USDC</code> / <code>USDB</code> / <code>EURC</code> into Stripe Fiat or Yield Treasury
+              </p>
+            </div>
+            <span class="surface-panel__tag">br_liq_1Q9...</span>
+          </div>
+          <div class="field-grid" style="margin-bottom: 0.85rem;">
+            <div class="field-group">
+              <label class="field-label" for="select-bridge-liq-chain">Source L1/L2 Network</label>
+              <select id="select-bridge-liq-chain" class="field-select">
+                <option value="base">Base (Coinbase L2 · &lt;2s Finality)</option>
+                <option value="solana">Solana (SPL · 400ms Finality)</option>
+                <option value="arbitrum">Arbitrum One (EVM L2)</option>
+                <option value="polygon">Polygon PoS</option>
+                <option value="stellar">Stellar Network</option>
+                <option value="ethereum">Ethereum Mainnet</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="select-bridge-liq-asset">Source Stablecoin Asset</label>
+              <select id="select-bridge-liq-asset" class="field-select">
+                <option value="usdc">USDC (Circle USD Coin)</option>
+                <option value="usdb">USDB (Bridge Yield-Bearing Stablecoin)</option>
+                <option value="eurc">EURC (Circle Euro Stablecoin)</option>
+              </select>
+            </div>
+            <div class="field-group field-group--full">
+              <label class="field-label" for="select-bridge-liq-dest">Bridge Settlement Destination</label>
+              <select id="select-bridge-liq-dest" class="field-select">
+                <option value="stripe_fiat_usd">Auto-Liquidate to Stripe USD Fiat Balance (0% FX Slippage)</option>
+                <option value="stripe_fiat_eur">Auto-Liquidate to Stripe EUR Fiat Balance (SEPA Instant)</option>
+                <option value="stripe_usdb_treasury">Hold Native USDB in Stripe Stablecoin Financial Account (fa_1Q9BridgeUSDBYield)</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn btn--cobalt" id="btn-create-bridge-liquidation" style="width: 100%; margin-bottom: 1rem;">
+            Provision Bridge Liquidation Address (/v0/liquidation_addresses)
+          </button>
+          <div id="bridge-liquidation-result" class="summary-ledger" style="display: none;"></div>
+        </div>
+
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h2 class="surface-panel__title">Bridge Cross-Border Stablecoin Payouts</h2>
+              <p style="font-size: 0.8rem; color: var(--ink-secondary);">
+                Instant global treasury &amp; Connect partner payouts (<code>/v0/transfers</code>) from Stripe USD Balance &rarr; <code>USDC</code> / <code>USDB</code> on Solana &amp; Base
+              </p>
+            </div>
+            <span class="surface-panel__tag">br_tr_1Q9...</span>
+          </div>
+          <div class="field-grid" style="margin-bottom: 0.85rem;">
+            <div class="field-group">
+              <label class="field-label" for="select-bridge-payout-recipient">Partner Studio / Recipient</label>
+              <select id="select-bridge-payout-recipient" class="field-select">
+                <option value="Kyoto Acoustics KK (JP)">Kyoto Acoustics KK (JP · Instant Solana USDC)</option>
+                <option value="Klangwerk Berlin GmbH (DE)">Klangwerk Berlin GmbH (DE · Base EURC)</option>
+                <option value="Bosphorus Modular Lab (TR)">Bosphorus Modular Lab (TR · Base USDB)</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="input-bridge-payout-amount">Payout Amount (USD Fiat Source)</label>
+              <input type="number" id="input-bridge-payout-amount" class="field-input" value="1250" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="select-bridge-payout-chain">Destination Rail</label>
+              <select id="select-bridge-payout-chain" class="field-select">
+                <option value="solana">Solana (400ms Finality)</option>
+                <option value="base">Base L2 (1.5s Finality)</option>
+                <option value="arbitrum">Arbitrum One</option>
+                <option value="stellar">Stellar Network</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="select-bridge-payout-asset">Destination Stablecoin</label>
+              <select id="select-bridge-payout-asset" class="field-select">
+                <option value="usdc">USDC</option>
+                <option value="usdb">USDB (Bridge Yield)</option>
+                <option value="eurc">EURC</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn btn--link-green" id="btn-run-bridge-payout" style="width: 100%; margin-bottom: 1rem;">
+            Execute Instant Bridge Stablecoin Payout (/v0/transfers)
+          </button>
+          <div id="bridge-payout-result" class="summary-ledger" style="display: none;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 5: STEP-BY-STEP PAYMENT STATE MACHINE & STRIPE API ACADEMY
+         ==================================================================== -->
+    <section id="view-statemachine" class="view-panel" aria-labelledby="sm-main-heading">
+      <div class="surface-panel" style="margin-bottom: 1.5rem;">
+        <div class="surface-panel__header" style="margin-bottom: 0.85rem;">
+          <div>
+            <h2 class="surface-panel__title" id="sm-main-heading">
+              Interactive Stripe PaymentIntent State Machine &amp; Step-by-Step API Academy
+            </h2>
+            <p style="font-size: 0.84rem; color: var(--ink-secondary);">
+              Learn every state transition, API contract, client/server responsibility, and webhook event in Stripe's 2026 payment architecture. Click any step below or trigger live transitions in the sandbox.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn" id="btn-sm-prev-step">&larr; Prev Step</button>
+            <button type="button" class="btn btn--cobalt" id="btn-sm-next-step">Next Step &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Interactive Live State Machine Sandbox Action Bar -->
+        <div class="sm-live-controls-bar">
+          <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-secondary); width: 100%; display: flex; justify-content: space-between;">
+            <strong>LIVE STATE MACHINE SANDBOX (MUTATE A REAL PAYMENT_INTENT OBJECT STEP BY STEP):</strong>
+            <code id="sm-live-pi-badge">Active Intent: Not initialized</code>
+          </span>
+          <button type="button" class="btn btn--primary" onclick="executeStateMachineTransition('create', 1)">
+            1. Create Intent (requires_payment_method)
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('attach_pm', 3)">
+            2. Attach Network Token PM (requires_confirmation)
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('require_3ds2', 5)">
+            3a. Trigger 3DS2 Challenge (requires_action)
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('async_processing', 6)">
+            3b. Submit ACH/SEPA (processing)
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('authorize_hold', 7)">
+            3c. Authorize Hold (requires_capture)
+          </button>
+          <button type="button" class="btn btn--cobalt" onclick="executeStateMachineTransition('bridge_stablecoin', 12)">
+            3d. Bridge Stablecoin L2 Settlement (USDC/USDB)
+          </button>
+          <button type="button" class="btn btn--link-green" onclick="executeStateMachineTransition('capture_succeed', 8)">
+            4. Capture &amp; Settle (succeeded)
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('decline_recover', 2)">
+            5a. Simulate Decline &rarr; Revert to requires_payment_method
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('cancel_void', 11)">
+            5b. Void Hold (canceled)
+          </button>
+          <button type="button" class="btn" onclick="executeStateMachineTransition('dispute_defense', 11)">
+            6. Simulate Dispute + 3DS2 Liability Shift Win
+          </button>
+        </div>
+      </div>
+
+      <div class="sm-academy-layout">
+        <!-- Left Sidebar: 12 Curriculum Steps -->
+        <aside class="sm-steps-sidebar" id="sm-steps-sidebar" aria-label="12 Steps of the Stripe Payment State Machine">
+          <!-- Populated dynamically by app.js -->
+        </aside>
+
+        <!-- Right Detail Area: Deep Step-by-Step Explanation, Architecture, Code & Live State -->
+        <div class="sm-detail-card" id="sm-detail-card">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 6: PRODUCTION GUARDRAILS & SECURITY LAB (7 MANDATORY BEST PRACTICES)
+         ==================================================================== -->
+    <section id="view-guardrails" class="view-panel" aria-labelledby="guardrails-main-heading">
+      <div class="surface-panel" style="margin-bottom: 1.5rem;">
+        <div class="surface-panel__header">
+          <div>
+            <h2 class="surface-panel__title" id="guardrails-main-heading">
+              Stripe Production Security Guardrails &amp; Best-Practice Verification Lab
+            </h2>
+            <p style="font-size: 0.84rem; color: var(--ink-secondary);">
+              Interactive verification of the 7 mandatory architectural guardrails required for enterprise Stripe deployments. Click any test button to execute a live API simulation and inspect the server enforcement payload below.
+            </p>
+          </div>
+          <span class="surface-panel__tag">7 Mandatory Pillars</span>
+        </div>
+
+        <!-- Live Guardrail Execution Result Console -->
+        <div id="guardrail-live-result-box" class="summary-ledger" style="margin-top: 0.75rem; background: hsl(222, 24%, 10%); color: hsl(210, 20%, 96%); border-color: hsl(222, 18%, 22%);">
+          <div class="ledger-row" style="border-bottom: 1px solid hsl(222, 18%, 20%); padding-bottom: 0.45rem; margin-bottom: 0.5rem;">
+            <strong id="guardrail-result-title" style="color: hsl(195, 85%, 72%); font-family: var(--font-mono); font-size: 0.8rem;">
+              LIVE VERIFICATION CONSOLE — CLICK ANY GUARDRAIL TEST BUTTON BELOW
+            </strong>
+            <span id="guardrail-result-badge" style="font-family: var(--font-mono); font-size: 0.72rem; color: hsl(154, 75%, 62%);">READY</span>
+          </div>
+          <pre id="guardrail-result-json" style="font-family: var(--font-mono); font-size: 0.74rem; line-height: 1.5; overflow-x: auto; margin: 0; color: hsl(210, 20%, 92%);">Select any of the 7 production guardrails below to run a live backend verification test against server.py.</pre>
+        </div>
+      </div>
+
+      <div class="two-col-grid">
+        <!-- PILLAR 1: Zero Trust on Client-Side Amounts -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">1. Zero Trust on Client-Side Amounts</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);">Never accept <code>amount</code> or <code>price</code> from the browser request body</p>
+            </div>
+            <span class="surface-panel__tag">Minor Units (Cents)</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            The browser only sends <code>sku_id + quantity</code>. The backend looks up the canonical price in the server-side <code>CATALOG</code> in integer minor units (e.g., <code>84900</code> for <code>$849.00</code>) and computes tax and FX server-side. Any request containing <code>amount</code> or <code>price</code> is rejected with <code>HTTP 400</code>.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--cobalt" onclick="runGuardrailTest('zero_trust_tamper')">
+              🛡️ Simulate Client Price Tamper ($0.01 Attack &rarr; HTTP 400)
+            </button>
+          </div>
+        </div>
+
+        <!-- PILLAR 2: Deterministic Idempotency-Keys -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">2. Deterministic <code>Idempotency-Key</code>s</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);"><code>f"pi_create_{order_id}_attempt_{attempt_no}"</code> · 24-Hour TTL</p>
+            </div>
+            <span class="surface-panel__tag">Zero Double-Charge</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            Never generate a random <code>uuid4()</code> inside a retry loop! Deterministic keys tied to the business entity ensure network retries replay the cached response for 24 hours, while reusing the same key with modified parameters triggers <code>HTTP 400 idempotency_error</code>.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--link-green" onclick="runGuardrailTest('idempotency_replay_and_mismatch', {sub_mode: 'safe_replay'})">
+              🔁 Simulate Safe Network Retry (24h Cached Replay)
+            </button>
+            <button type="button" class="btn" onclick="runGuardrailTest('idempotency_replay_and_mismatch', {sub_mode: 'param_mismatch'})">
+              ⚠️ Reuse Key with Modified Params (&rarr; HTTP 400)
+            </button>
+          </div>
+        </div>
+
+        <!-- PILLAR 3: Raw-Body Cryptographic Webhook Verification -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">3. Raw-Body Webhook HMAC (<code>Stripe-Signature</code>)</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);"><code>stripe.Webhook.construct_event(raw_body, sig, secret)</code> · 300s Window</p>
+            </div>
+            <span class="surface-panel__tag">HMAC-SHA256</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            Always pass the unparsed raw byte payload (<code>await request.body()</code>), never a re-serialized JSON dictionary, into <code>construct_event()</code>. Enforces HMAC-SHA256 authenticity and a <strong>300-second (5-minute)</strong> timestamp tolerance against replay attacks.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--link-green" onclick="runGuardrailTest('webhook_raw_body_hmac', {sub_mode: 'valid_raw'})">
+              ✓ Verify Raw Bytes HMAC
+            </button>
+            <button type="button" class="btn" onclick="runGuardrailTest('webhook_raw_body_hmac', {sub_mode: 'reserialized_json_fail'})">
+              ✕ Re-Serialized JSON Dict (&rarr; 400)
+            </button>
+            <button type="button" class="btn" onclick="runGuardrailTest('webhook_raw_body_hmac', {sub_mode: 'stale_timestamp_replay'})">
+              ⏱️ Stale &gt;300s Replay (&rarr; 400)
+            </button>
+          </div>
+        </div>
+
+        <!-- PILLAR 4: Idempotent & Asynchronous Webhook Fulfillment -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">4. Idempotent &amp; Async Webhook Fulfillment</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);"><code>INSERT INTO processed_events ... ON CONFLICT DO NOTHING</code> · &lt;200ms ACK</p>
+            </div>
+            <span class="surface-panel__tag">72h Retry Safe</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            Stripe retries unacknowledged webhooks for up to 72 hours with exponential backoff and does not guarantee event ordering. Deduplicate <code>event.id</code> in the database, enqueue fulfillment to an async background worker, and return <code>HTTP 200</code> within <code>&lt;200ms</code>.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--cobalt" onclick="runGuardrailTest('webhook_idempotent_async', {event_id: 'evt_3Q9DedupDemo01'})">
+              ⚡ Deliver Webhook #1 (Insert + Enqueue Worker)
+            </button>
+            <button type="button" class="btn" onclick="runGuardrailTest('webhook_idempotent_async', {event_id: 'evt_3Q9DedupDemo01'})">
+              🔁 Deliver Duplicate Webhook #2 (ON CONFLICT DO NOTHING)
+            </button>
+          </div>
+        </div>
+
+        <!-- PILLAR 5: Granular Stripe Exception Taxonomy -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">5. Granular Stripe Exception Taxonomy</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);"><code>CardError (402)</code> vs <code>RateLimitError (429) / APIConnectionError</code></p>
+            </div>
+            <span class="surface-panel__tag">Backoff + Jitter</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            Explicitly distinguish business declines (<code>stripe.error.CardError</code> HTTP 402 — never auto-retry; return user-friendly message &amp; increment <code>attempt_no</code>) from transient errors (<code>RateLimitError</code> 429 &amp; <code>APIConnectionError</code> — retry with exponential backoff + jitter using the <strong>same</strong> <code>Idempotency-Key</code>).
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn" onclick="runGuardrailTest('exception_taxonomy', {error_kind: 'card_error_402'})">
+              💳 Test CardError (402 Decline — No Auto-Retry)
+            </button>
+            <button type="button" class="btn btn--cobalt" onclick="runGuardrailTest('exception_taxonomy', {error_kind: 'transient_429'})">
+              ⚡ Test RateLimitError (429 — Backoff + Same Key)
+            </button>
+          </div>
+        </div>
+
+        <!-- PILLAR 6: Eliminating N+1 API Calls with expand[] & Cursor Pagination -->
+        <div class="surface-panel">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">6. Eliminating N+1 Calls with <code>expand[]</code> &amp; Cursors</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);"><code>expand=['latest_charge.balance_transaction']</code> &amp; <code>starting_after</code></p>
+            </div>
+            <span class="surface-panel__tag">1 HTTP Round-Trip</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            Fetch a <code>PaymentIntent</code> and its nested <code>latest_charge.balance_transaction</code> (net fee + FX rate) in a single HTTP request instead of 3 sequential calls. Use cursor pagination (<code>starting_after='pi_...'</code> or <code>auto_paging_iter()</code>) for list endpoints.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--link-green" onclick="runGuardrailTest('expand_and_cursor_pagination')">
+              🚀 Run Single-Call expand[] &amp; Cursor Pagination Demo
+            </button>
+          </div>
+        </div>
+
+        <!-- PILLAR 7: Structured metadata Propagation -->
+        <div class="surface-panel" style="grid-column: 1 / -1;">
+          <div class="surface-panel__header">
+            <div>
+              <h3 class="surface-panel__title">7. Structured <code>metadata</code> Propagation for Webhooks &amp; BigQuery Data Pipeline</h3>
+              <p style="font-size: 0.78rem; color: var(--ink-secondary);"><code>metadata={'order_id': order_id, 'customer_tier': 'enterprise', 'erp_cost_center': 'IT-01'}</code></p>
+            </div>
+            <span class="surface-panel__tag">Zero-Lookup Joins</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--ink-secondary); margin-bottom: 0.75rem;">
+            Attach structured business metadata across every <code>PaymentIntent</code>, <code>Charge</code>, <code>TaxCalculation</code>, and <code>Transfer</code> so downstream webhook consumers and BigQuery Data Pipeline tables join ledger records directly without external database lookups.
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn--cobalt" onclick="runGuardrailTest('metadata_bigquery_propagation')">
+              📊 Generate Propagated Metadata &amp; BigQuery Join SQL
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       3B. FLOATING AGENTIC AI CHATBOT POPUP WIDGET & LAUNCHER BUTTON
+       ==================================================================== -->
+  <button
+    type="button"
+    class="agentic-popup-launcher"
+    id="agentic-popup-launcher"
+    aria-expanded="false"
+    aria-controls="agentic-popup-widget"
+    onclick="toggleAgenticPopup()"
+  >
+    <span class="agentic-popup-launcher__pulse" aria-hidden="true"></span>
+    <span class="agentic-popup-launcher__icon" aria-hidden="true">🤖</span>
+    <span class="agentic-popup-launcher__copy">
+      <strong>Agentic AI Shopper</strong>
+      <small>Stripe ACP · Local LLM · Click to Buy</small>
+    </span>
+    <span class="agentic-popup-launcher__badge" id="agentic-launcher-badge">6-Step Trace</span>
+  </button>
+
+  <aside
+    id="agentic-popup-widget"
+    class="agentic-popup-widget"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="agentic-chat-main-heading"
+  >
+    <!-- Popup Top Header Bar -->
+    <div class="agentic-popup-widget__header">
+      <div class="agentic-popup-widget__title-wrap">
+        <div style="display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;">
+          <span class="surface-panel__tag" style="background: hsla(217, 85%, 60%, 0.22); color: hsl(195, 90%, 78%); font-weight: 700;">
+            STRIPE AGENTIC COMMERCE PROTOCOL (ACP) · 2026
+          </span>
+          <code id="agentic-llm-engine-badge" style="font-family: var(--font-mono); font-size: 0.72rem; color: hsl(154, 80%, 66%); font-weight: 700;">
+            ● Built-in Local Agentic LLM Engine v2.6
+          </code>
+          <span class="surface-panel__tag" id="agentic-trace-status-badge" style="background: hsla(158, 70%, 40%, 0.25); color: hsl(154, 85%, 75%);">
+            6-Step Pipeline Ready
+          </span>
+        </div>
+        <h2 class="agentic-popup-widget__title" id="agentic-chat-main-heading">
+          🤖 Local LLM Agentic Shopping Assistant &amp; Live Step-by-Step Stripe Execution Trace
+        </h2>
+      </div>
+
+      <div class="agentic-popup-widget__actions">
+        <button type="button" class="agentic-popup-ctrl-btn" id="btn-toggle-agentic-config" onclick="toggleAgenticPopupConfig()">
+          ⚙️ Guardrails &amp; Rail
+        </button>
+        <button type="button" class="agentic-popup-ctrl-btn" id="btn-toggle-agentic-trace" onclick="toggleAgenticPopupTrace()">
+          🔍 Hide 6-Step Trace
+        </button>
+        <button type="button" class="agentic-popup-ctrl-btn" id="btn-maximize-agentic-popup" onclick="toggleAgenticPopupMaximize()">
+          ⤢ Maximize
+        </button>
+        <button type="button" class="agentic-popup-ctrl-btn agentic-popup-ctrl-btn--close" id="btn-close-agentic-popup" onclick="toggleAgenticPopup(false)" aria-label="Minimize Agentic AI Chatbot Popup">
+          ✕ Minimize
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsible Guardrail & Runtime Config Bar inside Popup -->
+    <div class="agentic-popup-widget__config" id="agentic-popup-config-drawer">
+      <div class="field-grid" style="grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 0.75rem;">
+        <div class="field-group">
+          <label class="field-label" for="select-agent-exec-mode">Agent Execution Governance</label>
+          <select id="select-agent-exec-mode" class="field-select">
+            <option value="auto_complete">⚡ Autonomous Full Purchase (Steps 1–6 Auto)</option>
+            <option value="human_in_the_loop">🛡️ Human-in-the-Loop Gate (Pause at Step 4 spt_agent_)</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="select-agent-rail-override">Payment Rail / Token Preference</label>
+          <select id="select-agent-rail-override" class="field-select">
+            <option value="auto">🤖 Auto-Detect from Natural Language Prompt</option>
+            <option value="card">💳 Visa Agentic Token Service (spt_agent_... Single-Use)</option>
+            <option value="crypto_bridge">🪙 Bridge Stablecoin — USDC on Base L2 (Gasless)</option>
+            <option value="crypto_solana">⚡ Bridge Stablecoin — USDC on Solana (400ms)</option>
+            <option value="link">🟢 Stripe Link 1-Click Instant</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="input-agent-budget-override">
+            <span>Spend Mandate Cap (USD $)</span>
+            <span style="font-family: var(--font-mono); font-size: 0.64rem; color: var(--ink-muted);">Optional</span>
+          </label>
+          <input type="number" id="input-agent-budget-override" class="field-input" placeholder="e.g. 1400 (or type 'under $1400')" min="50" max="20000" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="select-agent-llm-runtime">Local LLM Runtime</label>
+          <select id="select-agent-llm-runtime" class="field-select">
+            <option value="builtin">Built-in Local NLU + Stripe MCP Engine</option>
+            <option value="ollama">Local Ollama (127.0.0.1:11434) + Fallback</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup Main Body: Left = Conversational Chatbot | Right = Step-by-Step Stripe Agentic Pipeline -->
+    <div class="agentic-popup-widget__body" id="agentic-popup-body">
+      <!-- LEFT COLUMN: Interactive Local LLM Chatbot -->
+      <div class="agentic-chat-panel">
+        <!-- Sample Natural-Language Prompt Chips -->
+        <div class="agentic-prompt-chips">
+          <span style="font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-muted); text-transform: uppercase; display: block; margin-bottom: 0.3rem;">
+            1-Click Agentic Shopping Prompts:
+          </span>
+          <div class="agentic-chips-wrap">
+            <button type="button" class="agentic-chip" onclick="sendAgenticQuickPrompt('Buy me a Field Synthesizer MK-II and a Kyoto Binaural Mic under $1,400 using USDC on Base')">
+              🪙 Synth MK-II + Kyoto Mic under $1,400 (Base USDC)
+            </button>
+            <button type="button" class="agentic-chip" onclick="sendAgenticQuickPrompt('Order the AmberNex Euro-DSP unit for our Berlin studio with DE811907980 VAT reverse charge')">
+              🇩🇪 AmberNex DSP for Berlin (0% EU VAT Reverse Charge)
+            </button>
+            <button type="button" class="agentic-chip" onclick="sendAgenticQuickPrompt('Get me the Reference Planar Headphones and Neural Cloud Pro subscription with a $900 budget')">
+              🎧 Planar Headphones + Neural Cloud SaaS ($900 Cap)
+            </button>
+            <button type="button" class="agentic-chip" onclick="sendAgenticQuickPrompt('Buy 2 Kyoto Microphones for our Tokyo studio in JPY using Solana USDC')">
+              🇯🇵 2x Kyoto Mics to Tokyo in JPY (Solana USDC)
+            </button>
+            <button type="button" class="agentic-chip" onclick="sendAgenticQuickPrompt('Buy the Field Synthesizer MK-II and Monolith Console with a $500 budget limit')">
+              🛑 Test Spend Guardrail Block ($1,389 vs $500 Cap)
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Chat Message Feed -->
+        <div class="agentic-chat-messages" id="agentic-chat-messages" role="log" aria-live="polite">
+          <div class="chat-msg chat-msg--agent">
+            <div class="chat-msg__meta">
+              <strong>Aetheria Local LLM Agent</strong>
+              <span>Stripe MCP + Visa Agentic Token Service Ready</span>
+            </div>
+            <div class="chat-msg__bubble">
+              Tell me what studio gear or cloud DSP subscriptions you want to buy, your budget limit, destination country/VAT ID, or preferred rail (Card, Link, or Bridge Stablecoins <code>USDC</code>/<code>USDB</code>).<br/><br/>
+              I execute purchases <strong>step by step</strong> using <strong>Zero-Trust server-side SKU prices</strong>, create an <code>agentic.order_intent</code>, provision a single-use <code>spt_agent_...</code> token, and settle via an idempotent <code>PaymentIntent</code> while streaming every live API payload on the right.
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form id="form-agentic-chat" class="agentic-chat-form" onsubmit="handleAgenticChatSubmit(event)">
+          <input
+            type="text"
+            id="input-agentic-chat-prompt"
+            class="field-input"
+            placeholder="Ask AI to buy gear (e.g., Buy Synth MK-II and Kyoto Mic under $1,400 with Base USDC)..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" class="btn btn--cobalt" id="btn-send-agentic-chat">
+            Send &amp; Buy &rarr;
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT COLUMN: Live 6-Step Stripe Agentic Commerce Execution Pipeline -->
+      <div class="agentic-trace-panel" id="agentic-trace-panel">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.55rem;">
+          <div>
+            <h3 style="font-size: 0.88rem; font-weight: 700; color: var(--ink-primary);">Step-by-Step Stripe ACP Execution Trace</h3>
+            <p style="font-size: 0.72rem; color: var(--ink-secondary);">
+              Click any step to inspect its cURL call &amp; live Stripe JSON payload
+            </p>
+          </div>
+        </div>
+
+        <!-- 6 Step Cards List -->
+        <div class="agentic-steps-list" id="agentic-steps-list">
+          <!-- Populated dynamically by app.js -->
+        </div>
+
+        <!-- Selected Step Deep Inspector (Explanation + cURL + JSON Payload) -->
+        <div class="agentic-step-inspector" id="agentic-step-inspector">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 4. EMV 3D SECURE 2 (3DS2) STEP-UP CHALLENGE MODAL -->
+  <div class="modal-backdrop" id="modal-3ds2" role="dialog" aria-modal="true" aria-labelledby="modal-3ds2-title">
+    <div class="modal-card">
+      <div class="surface-panel__header">
+        <div>
+          <h2 class="surface-panel__title" id="modal-3ds2-title">EMV 3D Secure 2.2 — Strong Customer Authentication</h2>
+          <p style="font-size: 0.76rem; color: var(--ink-secondary); font-family: var(--font-mono);">
+            Issuer: Aetheria Global Bank · Directory Server: visa_emv_3ds2_v2.2
+          </p>
+        </div>
+        <span class="surface-panel__tag">PSD2 SCA</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--ink-secondary); margin-bottom: 1rem;">
+        Stripe Radar detected an elevated transaction risk score (<code>42/100</code>) and triggered a frictionless-to-step-up <strong>3DS2 Challenge</strong>. Approve via biometric passkey or enter the 6-digit SMS one-time passcode below.
+      </p>
+      <div class="field-group" style="margin-bottom: 1rem;">
+        <label class="field-label" for="input-3ds2-otp">One-Time Verification Code (Pre-filled for Demo)</label>
+        <input type="text" id="input-3ds2-otp" class="field-input" value="849201" style="font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: 0.15em;" />
+      </div>
+      <div style="display: flex; gap: 0.65rem;">
+        <button type="button" class="btn btn--cobalt" id="btn-confirm-3ds2" style="flex: 1;">
+          Verify 3DS2 &amp; Complete PaymentIntent
+        </button>
+        <button type="button" class="btn" id="btn-cancel-3ds2">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. STRIPE API CONFIGURATION MODAL (SANDBOX VS LIVE KEYS) -->
+  <div class="modal-backdrop" id="modal-api-config" role="dialog" aria-modal="true" aria-labelledby="modal-config-title">
+    <div class="modal-card">
+      <div class="surface-panel__header">
+        <div>
+          <h2 class="surface-panel__title" id="modal-config-title">Stripe API Execution Mode</h2>
+          <p style="font-size: 0.76rem; color: var(--ink-secondary);">
+            Switch between the zero-setup spec-compliant simulator and live Stripe Test API passthrough
+          </p>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-bottom: 0.85rem;">
+        <label class="field-label" for="select-api-mode">Execution Mode</label>
+        <select id="select-api-mode" class="field-select">
+          <option value="sandbox_simulator">Interactive Sandbox Simulator (Default — Zero Keys Required)</option>
+          <option value="live_stripe_api">Live Stripe Test API Passthrough (Calls https://api.stripe.com/v1/...)</option>
+        </select>
+      </div>
+
+      <div class="field-group" style="margin-bottom: 0.85rem;">
+        <label class="field-label" for="input-pk-key">Stripe Publishable Key (<code>pk_test_...</code>)</label>
+        <input type="text" id="input-pk-key" class="field-input" value="pk_test_51Q9AetheriaLabsDemoStoreKey0001" style="font-family: var(--font-mono); font-size: 0.78rem;" />
+      </div>
+
+      <div class="field-group" style="margin-bottom: 1.15rem;">
+        <label class="field-label" for="input-sk-key">Stripe Secret Test Key (<code>sk_test_...</code> — optional for live API forwarding)</label>
+        <input type="password" id="input-sk-key" class="field-input" placeholder="sk_test_..." style="font-family: var(--font-mono); font-size: 0.78rem;" />
+      </div>
+
+      <div style="display: flex; gap: 0.65rem;">
+        <button type="button" class="btn btn--cobalt" id="btn-save-api-config" style="flex: 1;">
+          Save Runtime Configuration
+        </button>
+        <button type="button" class="btn" id="btn-close-api-config">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. PERSISTENT STRIPE DEVELOPER API & WEBHOOK INSPECTOR DRAWER -->
+  <aside class="dev-inspector-bar" id="dev-inspector-bar" aria-label="Stripe Developer API and Webhook Inspector">
+    <div class="dev-inspector-bar__header" id="dev-inspector-toggle">
+      <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <span class="status-dot"></span>
+        <strong style="font-size: 0.78rem; letter-spacing: 0.03em;">STRIPE DEVELOPER WORKBENCH &amp; WEBHOOK STREAM</strong>
+        <span style="font-size: 0.72rem; color: var(--ink-muted-dark);" id="dev-bar-latest-event">
+          Latest: Stripe.platform.initialized (200 OK)
+        </span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.74rem;">
+        <span>HMAC-SHA256 <code>Stripe-Signature</code> Verified</span>
+        <span id="dev-bar-expand-label" style="color: hsl(195, 80%, 72%);">[▲ Expand Inspector]</span>
+      </div>
+    </div>
+
+    <div class="dev-inspector-bar__body">
+      <div class="dev-stream-list" id="dev-stream-list">
+        <!-- Populated dynamically with API calls & Webhook events -->
+      </div>
+      <pre class="dev-payload-viewer" id="dev-payload-viewer">Select an API request or signed Webhook event on the left to inspect its full JSON payload, Stripe-Signature header, and cURL snippet.</pre>
+    </div>
+  </aside>
+
+  <script src="/app.js"></script>
+</body>
+</html>

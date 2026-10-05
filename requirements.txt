@@ -1,0 +1,1 @@
+# Zero external dependencies required — powered by Python 3.11+ standard library
